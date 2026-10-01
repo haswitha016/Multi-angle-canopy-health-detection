@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+.env
+
+# Local data, model checkpoints, uploads, generated reports
+data/*
+!data/.gitkeep
+models/*.pth
+models/*.pt
+static/uploads/*
+!static/uploads/.gitkeep
+reports/*
+!reports/.gitkeep
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+
+data/
+models/*.pth
+models/*.pt
+
+static/uploads/
+*.zip
+
+
