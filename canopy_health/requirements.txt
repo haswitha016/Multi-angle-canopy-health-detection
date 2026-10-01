@@ -1,0 +1,15 @@
+# Core numerical and image processing libraries
+numpy>=1.26,<3
+pandas>=2.1,<3
+opencv-python-headless>=4.9,<5
+Pillow>=10,<13
+
+# PyTorch: install the CPU build for a CPU-only machine.
+# See https://pytorch.org/get-started/locally/ if you need a CUDA-specific build.
+torch>=2.2,<3
+torchvision>=0.17,<1
+
+# Training metrics, web app, and configuration
+scikit-learn>=1.4,<2
+Flask>=3.0,<4
+python-dotenv>=1.0,<2

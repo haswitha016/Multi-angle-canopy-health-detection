@@ -1,0 +1,71 @@
+{
+  "report_id": "9d246d90970f40c583061113796348d1",
+  "mode": "demo",
+  "note": "Estimates visible canopy stress categories; not a diagnosis of any specific disease.",
+  "images": [
+    {
+      "mode": "demo",
+      "predicted_class": "Healthy",
+      "probabilities": {
+        "Healthy": 0.66,
+        "Mild Stress": 0.25,
+        "Severe Stress": 0.09
+      },
+      "confidence": 0.66,
+      "health_score": 78.5,
+      "health_category": "Healthy",
+      "quality": {
+        "sharpness": 3939.29,
+        "brightness": 147.1,
+        "resolution": "397 x 408",
+        "width": 397,
+        "height": 408,
+        "vegetation_coverage": 0.6359,
+        "quality_score": 0.804,
+        "flags": [],
+        "is_low_quality": false
+      },
+      "gradcam_path": null,
+      "view": "View 1",
+      "filename": "plant1.png",
+      "image_url": "/uploads/22ec2086ea7149909bb4712389881d83.png"
+    }
+  ],
+  "fusion": {
+    "majority_vote": {
+      "probabilities": {
+        "Healthy": 1.0,
+        "Mild Stress": 0.0,
+        "Severe Stress": 0.0
+      },
+      "predicted_class": "Healthy",
+      "confidence": 1.0,
+      "health_score": 100.0,
+      "health_category": "Healthy"
+    },
+    "average_probability": {
+      "probabilities": {
+        "Healthy": 0.66,
+        "Mild Stress": 0.25,
+        "Severe Stress": 0.09
+      },
+      "predicted_class": "Healthy",
+      "confidence": 0.66,
+      "health_score": 78.5,
+      "health_category": "Healthy"
+    },
+    "confidence_weighted": {
+      "probabilities": {
+        "Healthy": 0.66,
+        "Mild Stress": 0.25,
+        "Severe Stress": 0.09
+      },
+      "predicted_class": "Healthy",
+      "confidence": 0.66,
+      "health_score": 78.5,
+      "health_category": "Healthy"
+    }
+  },
+  "selected_fusion": "confidence_weighted",
+  "quality_weighted": false
+}

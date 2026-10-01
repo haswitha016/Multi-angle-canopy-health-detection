@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Canopy Field Lab | Multi-angle assessment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/"><span class="brand-mark">C</span><span>CANOPY <b>FIELD LAB</b></span></a>
+    <div class="topbar-meta"><span class="status-dot"></span> RESEARCH PROTOTYPE <span class="meta-divider"></span> RGB / MULTI-VIEW</div>
+  </header>
+  <main class="shell">
+    <section class="page-heading">
+      <div><p class="eyebrow">FIELD ANALYSIS / 01</p><h1>Canopy health assessment</h1><p class="lede">Combine photographs of one plant or canopy for a more complete visual estimate.</p></div>
+      <div class="class-key"><span><i class="key-dot healthy"></i>Healthy</span><span><i class="key-dot mild"></i>Mild stress</span><span><i class="key-dot severe"></i>Severe stress</span></div>
+    </section>
+    <section class="workspace-grid">
+      <aside class="control-panel">
+        <div class="panel-title"><span class="step-num">01</span><h2>Image set</h2></div>
+        <form id="analysis-form">
+          <label class="upload-zone" for="image-input" id="upload-zone">
+            <span class="upload-icon" aria-hidden="true">＋</span>
+            <strong>Drop canopy views here</strong>
+            <span>or browse images · up to 12 views</span>
+            <small>JPG, PNG, WEBP, BMP</small>
+          </label>
+          <input id="image-input" name="images" type="file" accept="image/jpeg,image/png,image/webp,image/bmp" multiple hidden>
+          <div id="file-list" class="file-list" aria-live="polite"></div>
+          <div class="form-divider"></div>
+          <fieldset class="mode-fieldset">
+            <legend>Prediction source</legend>
+            <label class="mode-option selected" id="demo-option"><input type="radio" name="mode" value="demo" checked><span class="radio-dot"></span><span><b>DEMO MODE</b><small>Heuristic preview · not a trained model</small></span><span class="demo-pill">DEMO</span></label>
+            <label class="mode-option" id="trained-option"><input type="radio" name="mode" value="trained_model"><span class="radio-dot"></span><span><b>Trained model</b><small>MobileNetV3 checkpoint required</small></span></label>
+          </fieldset>
+          <label class="quality-toggle"><input id="quality-weighting" type="checkbox"><span>Reduce fusion weight for flagged image quality</span></label>
+          <button class="analyze-button" type="submit"><span>Analyze image set</span><span aria-hidden="true">↗</span></button>
+          <p class="privacy-note">Uploaded images are stored locally in this project. Avoid uploading identifiable or sensitive imagery.</p>
+        </form>
+      </aside>
+      <section class="results-area" aria-live="polite">
+        <div id="empty-state" class="empty-state">
+          <div class="empty-figure"><div class="figure-sun"></div><div class="figure-stem"></div><div class="figure-leaf leaf-a"></div><div class="figure-leaf leaf-b"></div><div class="figure-ground"></div><span>01—12</span></div>
+          <p class="eyebrow">WAITING FOR IMAGE SET</p><h2>Start with a few views</h2><p>Upload front, side, back, or angled views of the same canopy. Each image is assessed separately before the results are combined.</p>
+        </div>
+        <div id="error-banner" class="error-banner" role="alert" hidden></div>
+        <div id="results" hidden>
+          <div class="result-heading"><div><p class="eyebrow" id="result-mode">ASSESSMENT</p><h2>Canopy summary</h2></div><a id="report-link" class="download-button" href="#" download><span aria-hidden="true">↓</span> Download report</a></div>
+          <div class="summary-strip">
+            <div class="summary-main"><span class="summary-label">FUSED HEALTH ESTIMATE</span><strong id="final-category">—</strong><span id="final-confidence">—</span></div>
+            <div class="score-ring" id="score-ring"><strong id="final-score">—</strong><span>/ 100</span></div>
+            <div class="summary-note">Expected health score from<br>the selected fused probabilities.</div>
+          </div>
+          <div class="fusion-section">
+            <div class="section-heading"><div><p class="eyebrow">METHOD COMPARISON</p><h3>Multi-angle fusion</h3></div><label class="select-wrap">Displayed result<select id="fusion-select"><option value="confidence_weighted">Confidence-weighted</option><option value="average_probability">Average probability</option><option value="majority_vote">Majority vote</option></select></label></div>
+            <div class="fusion-cards" id="fusion-cards"></div>
+          </div>
+          <div class="chart-grid">
+            <section class="chart-panel"><p class="eyebrow">CLASS DISTRIBUTION</p><h3>Fused probabilities</h3><div class="chart-box"><canvas id="probability-chart" aria-label="Fused class probabilities"></canvas></div></section>
+            <section class="chart-panel"><p class="eyebrow">VIEW-BY-VIEW</p><h3>Health score by image</h3><div class="chart-box"><canvas id="score-chart" aria-label="Health score by uploaded image"></canvas></div></section>
+          </div>
+          <div class="section-heading image-heading"><div><p class="eyebrow">INDIVIDUAL VIEWS</p><h3>Image assessments</h3></div><span id="view-count" class="view-count"></span></div>
+          <div id="image-cards" class="image-cards"></div>
+          <p class="disclaimer">These outputs estimate visible stress categories, not specific diseases. Grad-CAM visualizes image regions contributing to a model prediction; it does not establish biological correctness. Check image quality and verify findings in the field.</p>
+        </div>
+      </section>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
