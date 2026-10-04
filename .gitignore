@@ -30,3 +30,6 @@ static/uploads/
 *.zip
 
 
+data/train/
+data/validation/
+data/test/

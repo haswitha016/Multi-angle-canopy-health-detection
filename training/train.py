@@ -82,7 +82,7 @@ def train(dataset_dir: Path, model_path: Path, epochs: int, patience: int, batch
     checkpoint = torch.load(model_path, map_location=device, weights_only=True)
     model.load_state_dict(checkpoint["state_dict"])
     test_metrics = run_epoch(model, loaders["test"], criterion, device)
-    print("Test metrics (macro precision/recall/F1; confusion matrix uses Healthy, Mild, Severe order):")
+    print("Test metrics (macro precision/recall/F1; confusion matrix uses Healthy, Severe order):")
     print(test_metrics)
     return test_metrics
 

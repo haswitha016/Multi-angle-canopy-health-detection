@@ -6,8 +6,8 @@ from collections import Counter
 from typing import Any
 
 
-CLASS_NAMES = ("Healthy", "Mild Stress", "Severe Stress")
-HEALTH_VALUES = (100.0, 50.0, 0.0)
+CLASS_NAMES = ("Healthy", "Stressed")
+HEALTH_VALUES = (100.0, 0.0)
 
 
 def health_score(probabilities: list[float]) -> float:
@@ -19,11 +19,9 @@ def health_score(probabilities: list[float]) -> float:
 
 def health_category(score: float) -> str:
     """Map a health score to the nearest named health band."""
-    if score >= 75:
+    if score >= 50:
         return "Healthy"
-    if score >= 25:
-        return "Mild Stress"
-    return "Severe Stress"
+    return "Stressed"
 
 
 def _normalize(values: list[float]) -> list[float]:
