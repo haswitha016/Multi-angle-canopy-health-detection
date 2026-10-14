@@ -62,6 +62,10 @@ class FlaskAppTests(unittest.TestCase):
             set(report["fusion"]),
             {"majority_vote", "average_probability", "confidence_weighted"},
         )
+        self.assertIn("predicted_class", report["summary"])
+        self.assertIn("health_score", report["summary"])
+        self.assertIn("recommendation", report["summary"])
+        self.assertIn("message", report["summary"]["recommendation"])
         download = self.client.get(report["report_url"])
         self.assertEqual(download.status_code, 200)
         saved_report = json.loads(download.get_data(as_text=True))

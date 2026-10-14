@@ -8,12 +8,12 @@ class FusionTests(unittest.TestCase):
         self.predictions = [
             {
                 "predicted_class": "Healthy",
-                "probabilities": [0.8, 0.15, 0.05],
+                "probabilities": [0.8, 0.2],
                 "quality": {"quality_score": 1.0},
             },
             {
-                "predicted_class": "Mild Stress",
-                "probabilities": [0.2, 0.7, 0.1],
+                "predicted_class": "Stressed",
+                "probabilities": [0.3, 0.7],
                 "quality": {"quality_score": 0.5},
             },
         ]
@@ -24,12 +24,12 @@ class FusionTests(unittest.TestCase):
         for result in results.values():
             self.assertAlmostEqual(sum(result["probabilities"].values()), 1.0)
             self.assertEqual(result["predicted_class"], max(result["probabilities"], key=result["probabilities"].get))
-        self.assertAlmostEqual(health_score([1.0, 0.0, 0.0]), 100.0)
-        self.assertEqual(health_category(50.0), "Mild Stress")
+        self.assertAlmostEqual(health_score([1.0, 0.0]), 100.0)
+        self.assertEqual(health_category(49.9), "Stressed")
 
     def test_confidence_weighting_uses_probability_maxima(self):
         result = fuse_predictions(self.predictions)["confidence_weighted"]
-        expected_healthy = (0.8 * 0.8 + 0.7 * 0.2) / (0.8 + 0.7)
+        expected_healthy = (0.8 * 0.8 + 0.7 * 0.3) / (0.8 + 0.7)
         self.assertAlmostEqual(result["probabilities"]["Healthy"], expected_healthy)
 
     def test_quality_weighting_is_an_explicit_option(self):
@@ -45,7 +45,7 @@ class FusionTests(unittest.TestCase):
             for prediction in self.predictions
         ]
         result = fuse_predictions(predictions, quality_weighted=True)["confidence_weighted"]
-        self.assertAlmostEqual(result["probabilities"]["Healthy"], 0.5)
+        self.assertAlmostEqual(result["probabilities"]["Healthy"], 0.55)
 
     def test_rejects_no_predictions(self):
         with self.assertRaises(ValueError):

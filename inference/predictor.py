@@ -57,11 +57,11 @@ def demo_predict(image_path: str | Path) -> dict[str, Any]:
     coverage = quality["vegetation_coverage"]
     brightness = quality["brightness"]
     if coverage >= 0.35 and 35 <= brightness <= 225:
-        probabilities = [0.66, 0.25, 0.09]
+        probabilities = [0.75, 0.25]
     elif coverage >= 0.12:
-        probabilities = [0.2, 0.62, 0.18]
+        probabilities = [0.4, 0.6]
     else:
-        probabilities = [0.08, 0.27, 0.65]
+        probabilities = [0.15, 0.85]
     index = int(np.argmax(probabilities))
     score = health_score(probabilities)
     return {

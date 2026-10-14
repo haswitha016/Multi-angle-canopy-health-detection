@@ -18,7 +18,7 @@
   <main class="shell">
     <section class="page-heading">
       <div><p class="eyebrow">FIELD ANALYSIS / 01</p><h1>Canopy health assessment</h1><p class="lede">Combine photographs of one plant or canopy for a more complete visual estimate.</p></div>
-      <div class="class-key"><span><i class="key-dot healthy"></i>Healthy</span><span><i class="key-dot mild"></i>Mild stress</span><span><i class="key-dot severe"></i>Severe stress</span></div>
+      <div class="class-key"><span><i class="key-dot healthy"></i>Healthy</span><span><i class="key-dot severe"></i>Stressed</span></div>
     </section>
     <section class="workspace-grid">
       <aside class="control-panel">
@@ -52,10 +52,46 @@
         <div id="results" hidden>
           <div class="result-heading"><div><p class="eyebrow" id="result-mode">ASSESSMENT</p><h2>Canopy summary</h2></div><a id="report-link" class="download-button" href="#" download><span aria-hidden="true">↓</span> Download report</a></div>
           <div class="summary-strip">
-            <div class="summary-main"><span class="summary-label">FUSED HEALTH ESTIMATE</span><strong id="final-category">—</strong><span id="final-confidence">—</span></div>
+            <div class="summary-main">
+              <span class="summary-label">FUSED HEALTH ESTIMATE</span>
+              <strong id="final-category">—</strong>
+              <span id="final-confidence">—</span>
+            </div>
             <div class="score-ring" id="score-ring"><strong id="final-score">—</strong><span>/ 100</span></div>
-            <div class="summary-note">Expected health score from<br>the selected fused probabilities.</div>
+            <div class="summary-note" id="summary-note">Expected health score from the selected fused probabilities.</div>
           </div>
+
+          <div class="dashboard-panels">
+            <section class="panel-card prediction-panel">
+              <div class="panel-header"><p class="eyebrow">PREDICTION CARD</p><h3>Current assessment</h3></div>
+              <div class="prediction-card-body">
+                <div class="prediction-pill" id="prediction-pill">Healthy</div>
+                <div class="prediction-meta">
+                  <span>Confidence</span>
+                  <strong id="prediction-confidence">—</strong>
+                </div>
+                <div class="prediction-meta">
+                  <span>Health score</span>
+                  <strong id="prediction-score">—</strong>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel-card history-panel">
+              <div class="panel-header"><p class="eyebrow">SESSION HISTORY</p><h3>Recent runs</h3></div>
+              <ul id="history-list" class="history-list"></ul>
+            </section>
+
+            <section class="panel-card recommendation-panel">
+              <div class="panel-header"><p class="eyebrow">CARE GUIDANCE</p><h3>Recommended action</h3></div>
+              <div class="recommendation-body">
+                <span class="recommendation-badge">Action</span>
+                <h4 id="care-title">Maintain current care</h4>
+                <p id="care-message">Continue the current watering routine and monitor soil moisture over time.</p>
+              </div>
+            </section>
+          </div>
+
           <div class="fusion-section">
             <div class="section-heading"><div><p class="eyebrow">METHOD COMPARISON</p><h3>Multi-angle fusion</h3></div><label class="select-wrap">Displayed result<select id="fusion-select"><option value="confidence_weighted">Confidence-weighted</option><option value="average_probability">Average probability</option><option value="majority_vote">Majority vote</option></select></label></div>
             <div class="fusion-cards" id="fusion-cards"></div>

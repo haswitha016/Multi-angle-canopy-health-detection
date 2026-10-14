@@ -12,7 +12,7 @@ from flask import Flask, jsonify, render_template, request, send_from_directory,
 from PIL import Image, UnidentifiedImageError
 from werkzeug.utils import secure_filename
 
-from inference.fusion import fuse_predictions
+from inference.fusion import CLASS_NAMES, fuse_predictions
 from inference.predictor import CanopyPredictor, demo_predict
 
 
@@ -46,6 +46,29 @@ def get_predictor() -> CanopyPredictor:
             )
         _predictor = CanopyPredictor(MODEL_PATH)
     return _predictor
+
+
+def build_care_recommendation(predicted_class: str, health_score: float, quality_flags: list[str] | None = None) -> dict[str, str]:
+    flags = {flag.lower() for flag in (quality_flags or [])}
+    if predicted_class == "Healthy" and health_score >= 60:
+        return {
+            "title": "Maintain current care",
+            "message": "The canopy looks healthy. Continue the current watering routine and monitor soil moisture and foliage condition over time.",
+        }
+    if any(token in flags for token in {"blurry", "very dark or overexposed", "low resolution", "little detected vegetation"}):
+        return {
+            "title": "Re-check image quality and soil moisture",
+            "message": "The image quality suggests some uncertainty. Re-capture the canopy in clearer light and confirm soil moisture before changing irrigation or soil conditions.",
+        }
+    if health_score < 35:
+        return {
+            "title": "Water thoroughly and refresh the soil",
+            "message": "The canopy appears stressed. Water the plant more consistently and consider replacing or improving the soil if drainage or nutrient issues are suspected.",
+        }
+    return {
+        "title": "Water and monitor soil moisture",
+        "message": "The canopy appears stressed. Increase watering consistency, inspect the soil and root zone, and monitor daily until the plant shows recovery.",
+    }
 
 
 @app.get("/")
@@ -103,13 +126,18 @@ def analyze():
                 "view": view_name,
                 "filename": original_name,
                 "image_url": url_for("uploaded_file", filename=stored_name),
-                "probabilities": dict(zip(("Healthy", "Mild Stress", "Severe Stress"), result["probabilities"])),
+                "probabilities": dict(zip(CLASS_NAMES, result["probabilities"])),
             }
         )
         image_rows.append(result)
 
     quality_weighted = request.form.get("quality_weighted") == "true"
     fusion_results = fuse_predictions(predictions, quality_weighted=quality_weighted)
+    summary = fusion_results["confidence_weighted"]
+    quality_flags = []
+    for image in image_rows:
+        quality_flags.extend(image.get("quality", {}).get("flags", []))
+    recommendation = build_care_recommendation(summary["predicted_class"], summary["health_score"], quality_flags)
     report_id = uuid.uuid4().hex
     report = {
         "report_id": report_id,
@@ -119,6 +147,14 @@ def analyze():
         "fusion": fusion_results,
         "selected_fusion": "confidence_weighted",
         "quality_weighted": quality_weighted,
+        "summary": {
+            "predicted_class": summary["predicted_class"],
+            "confidence": summary["confidence"],
+            "health_score": summary["health_score"],
+            "health_category": summary["health_category"],
+            "probabilities": summary["probabilities"],
+            "recommendation": recommendation,
+        },
     }
     (REPORT_DIR / f"{report_id}.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     report["report_url"] = url_for("download_report", report_id=report_id)
